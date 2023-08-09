@@ -28,3 +28,5 @@ router.get("/updatepoint/:id", () => {});
 router.put("/updatepoint/:id", () => {});
 router.post("/updatepoint/:id", () => {});
 router.delete("/updatepoint", () => {});
+
+export default router;
