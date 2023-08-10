@@ -1,5 +1,6 @@
 import { Router } from "express";
-import { body, validationResult } from "express-validator";
+import { body, oneOf, validationResult } from "express-validator";
+import { handleInputErrors } from "./modules/middleware";
 
 const router = Router();
 
@@ -10,15 +11,25 @@ router.get("/product", (req, res) => {
   res.json({ message: "Hello World!" });
 });
 router.get("/product/:id", () => {});
-router.put("/product/:id", body("name").isString(), (req, res) => {
-  const errors = validationResult(res);
+router.put(
+  "/product/:id",
+  body("name").isString(),
+  handleInputErrors,
+  (req, res) => {
+    const errors = validationResult(res);
 
-  if (!errors.isEmpty()) {
-    res.status(401);
-    res.json({ error: errors.array() });
+    if (!errors.isEmpty()) {
+      res.status(401);
+      res.json({ error: errors.array() });
+    }
   }
-});
-router.post("/product/:id", () => {});
+);
+router.post(
+  "/product/:id",
+  body("name").isString(),
+  handleInputErrors,
+  () => {}
+);
 router.delete("/product", () => {});
 
 /**
@@ -26,17 +37,40 @@ router.delete("/product", () => {});
  */
 router.get("/update", () => {});
 router.get("/update/:id", () => {});
-router.put("/update/:id", () => {});
-router.post("/update/:id", () => {});
-router.delete("/update", () => {});
+router.put(
+  "/update/:id",
+  body("title").exists().isString(),
+  body("body").exists().isString(),
+  oneOf([body("IN_PROGRESS"), body("SHIPPED"), body("DEPRECATED")]),
+  body("version").optional(),
+  () => {}
+);
+router.post("/update/", () => {
+  body("title").exists().isString();
+  body("body").exists().isString();
+});
+router.delete("/update/:id", () => {});
 
 /**
  * Update point
  */
 router.get("/updatepoint", () => {});
 router.get("/updatepoint/:id", () => {});
-router.put("/updatepoint/:id", () => {});
-router.post("/updatepoint/:id", () => {});
+router.put(
+  "/updatepoint/:id",
+  body("name").optional().isString(),
+  body("description").optional().isString(),
+  body("status").isIn(["IN_PROGRESS", "SHIPPED", "DEPRECATED"]),
+  body("version").optional(),
+  () => {}
+);
+router.post(
+  "/updatepoint/:id",
+  body("name").optional().isString(),
+  body("description").optional().isString(),
+  body("updatedId").exists().isString(),
+  () => {}
+);
 router.delete("/updatepoint", () => {});
 
 export default router;
