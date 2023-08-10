@@ -1,4 +1,5 @@
 import { Router } from "express";
+import { body, validationResult } from "express-validator";
 
 const router = Router();
 
@@ -9,7 +10,14 @@ router.get("/product", (req, res) => {
   res.json({ message: "Hello World!" });
 });
 router.get("/product/:id", () => {});
-router.put("/product/:id", () => {});
+router.put("/product/:id", body("name").isString(), (req, res) => {
+  const errors = validationResult(res);
+
+  if (!errors.isEmpty()) {
+    res.status(401);
+    res.json({ error: errors.array() });
+  }
+});
 router.post("/product/:id", () => {});
 router.delete("/product", () => {});
 

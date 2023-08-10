@@ -26,7 +26,7 @@ export const signIn = async (req, res) => {
 
   if (!isValid) {
     res.status(401);
-    res.json({ message: "nope! :(" });
+    res.send({ message: "nope! :(" });
     return;
   }
 
