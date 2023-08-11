@@ -24,7 +24,9 @@ model Product {
   name        String   @db.VarChar(255)
   belongsTo   User     @relation(fields: [belongsToId], references: [id])
   belongsToId String
-  Update      Update[]
+  updates     Update[]
+
+  @@unique([id, belongsToId])
 }
 
 enum UPDATE_STATUS {
