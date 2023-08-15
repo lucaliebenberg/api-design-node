@@ -21,4 +21,13 @@ app.use("/api", protect, router);
 app.post("/user", createNewUser);
 app.post("/signin", signIn);
 
+// error handlers
+// @ts-ignore
+app.use((err, req, res, next) => {
+  console.log("====================================");
+  console.log(err);
+  res.json({ message: "oops, there was an error..." });
+  console.log("====================================");
+});
+
 export default app;
